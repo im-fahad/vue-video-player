@@ -1,0 +1,105 @@
+{
+  "name": "@glitchlab/vue-video-player",
+  "version": "1.0.0",
+  "description": "Vue 3 / Nuxt 3 video player with HLS support, device-mode toggle, hover-to-play, and zero global CSS side-effects.",
+  "license": "MIT",
+  "author": "im-fahad",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "style": "./dist/style.css",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./style.css": "./dist/style.css",
+    "./nuxt": {
+      "types": "./dist/nuxt-module.d.ts",
+      "import": "./dist/nuxt-module.mjs",
+      "require": "./dist/nuxt-module.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "nuxt",
+    "nuxt3",
+    "video",
+    "player",
+    "hls",
+    "hls.js",
+    "streaming",
+    "m3u8",
+    "video-player",
+    "vue-player",
+    "typescript",
+    "responsive",
+    "mobile",
+    "desktop",
+    "adaptive",
+    "overlay",
+    "hover-play",
+    "device-toggle"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/im-fahad/react-video-player.git",
+    "directory": "packages/vue-video-player"
+  },
+  "homepage": "https://github.com/im-fahad/react-video-player/tree/main/packages/vue-video-player#readme",
+  "bugs": {
+    "url": "https://github.com/im-fahad/react-video-player/issues"
+  },
+  "peerDependencies": {
+    "hls.js": ">=1",
+    "vue": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "@nuxt/kit": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^9",
+    "@nuxt/kit": "^3.0.0",
+    "@types/node": "^20",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^9.32.0",
+    "@vitejs/plugin-vue": "^5",
+    "@vue/test-utils": "^2.4.6",
+    "hls.js": "^1.5.0",
+    "jsdom": "^25.0.1",
+    "typescript": "^5",
+    "vite": "^5",
+    "vite-plugin-dts": "^3",
+    "vitest": "^2.1.8",
+    "vue": "^3.4.0",
+    "vue-tsc": "^2",
+    "typescript-eslint": "^8.56.1"
+  },
+  "scripts": {
+    "build": "vite build",
+    "build:watch": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src",
+    "type-check": "vue-tsc --noEmit",
+    "prepublishOnly": "pnpm build"
+  }
+}
