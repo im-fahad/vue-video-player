@@ -277,14 +277,14 @@ The component is SSR-safe. Server output renders the static frame; HLS attaches 
 ## Contributing
 
 ```bash
-git clone https://github.com/im-fahad/react-video-player.git
-cd react-video-player
+git clone https://github.com/im-fahad/vue-video-player.git
+cd vue-video-player
 pnpm install
-pnpm --filter @glitchlab/vue-video-player test
-pnpm dev:vue   # opens the local Vue playground at http://localhost:5174
+pnpm test
+pnpm build
 ```
 
-Issues and PRs welcome at <https://github.com/im-fahad/react-video-player/issues>.
+Issues and PRs welcome at <https://github.com/im-fahad/vue-video-player/issues>.
 
 ---
 
