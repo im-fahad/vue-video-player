@@ -1,6 +1,6 @@
 {
   "name": "@glitchlab/vue-video-player",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Vue 3 / Nuxt 3 video player with HLS support, device-mode toggle, hover-to-play, and zero global CSS side-effects.",
   "license": "MIT",
   "author": "im-fahad",

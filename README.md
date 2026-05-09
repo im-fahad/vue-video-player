@@ -7,6 +7,8 @@ A lightweight, HLS-capable Vue 3 video player with a polished overlay UI, device
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![types: TypeScript](https://img.shields.io/badge/types-TypeScript-blue.svg)](#typescript)
 
+**Live demo →** <https://video-player-playgraound.vercel.app/> — drop in a video file or paste any URL (HLS `.m3u8` supported). The deployed playground uses the React build, but the same UX, props, and styles ship with this Vue package.
+
 ---
 
 ## Why this player
