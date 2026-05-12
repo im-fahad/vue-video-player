@@ -5,3 +5,4 @@ export { default as HLSPlayer } from "./HLSPlayer.vue";
 export type {
   VideoPlayerProps, HLSPlayerProps, DeviceMode, AspectRatio
 } from "./utils/types";
+export { parseYouTubeId, parseYouTubeStart, youTubeEmbedUrl } from "./utils/youtube";

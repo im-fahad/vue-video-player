@@ -30,6 +30,11 @@
   display: block;
 }
 
+.gvp-youtube {
+  border: 0;
+  object-fit: contain;
+}
+
 .gvp-vignette {
   pointer-events: none;
   position: absolute;

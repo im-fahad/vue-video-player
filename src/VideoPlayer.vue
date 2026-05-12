@@ -6,6 +6,7 @@ import IconMobile from "./components/IconMobile.vue";
 import IconPlay from "./components/IconPlay.vue";
 import IconX from "./components/IconX.vue";
 import type { DeviceMode, VideoPlayerProps } from "./utils/types";
+import { parseYouTubeId, parseYouTubeStart, youTubeEmbedUrl } from "./utils/youtube";
 
 const props = withDefaults(
   defineProps<VideoPlayerProps & { class?: string; closable?: boolean }>(),
@@ -16,6 +17,7 @@ const props = withDefaults(
     muted: true,
     loop: false,
     controls: false,
+    autoPlay: false,
     closable: false,
     class: ""
   }
@@ -32,6 +34,20 @@ const device = ref<DeviceMode>(props.defaultDevice);
 const isPlaying = ref(false);
 const showTooltip = ref(false);
 const playPromise = ref<Promise<void> | null>(null);
+
+const youTubeId = computed(() => parseYouTubeId(props.src));
+const isYouTube = computed(() => youTubeId.value !== null);
+const youTubeSrc = computed(() =>
+  youTubeId.value
+    ? youTubeEmbedUrl(youTubeId.value, {
+        autoPlay: props.autoPlay,
+        muted: props.muted,
+        loop: props.loop,
+        controls: props.controls,
+        startSeconds: parseYouTubeStart(props.src)
+      })
+    : null
+);
 
 const aspectRatio = computed(() =>
   device.value === "mobile"
@@ -77,12 +93,12 @@ async function safePause() {
 }
 
 async function hoverStart() {
-  if (!props.hoverPlay) return;
+  if (!props.hoverPlay || isYouTube.value) return;
   await safePlay();
 }
 
 async function hoverStop() {
-  if (!props.hoverPlay) return;
+  if (!props.hoverPlay || isYouTube.value) return;
   await safePause();
   isPlaying.value = false;
 }
@@ -116,13 +132,24 @@ function onMouseLeave() {
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
   >
+    <iframe
+      v-if="isYouTube"
+      class="gvp-video gvp-youtube"
+      :src="youTubeSrc ?? undefined"
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+    />
     <HLSPlayer
+      v-else
       ref="hlsPlayerRef"
       :controls="controls"
       :hls-config="hlsConfig"
       :is-hls="isHls"
       :loop="loop"
       :muted="muted"
+      :auto-play="autoPlay"
       :plays-inline="true"
       :poster="poster"
       :src="src"
@@ -140,7 +167,7 @@ function onMouseLeave() {
       <slot />
     </HLSPlayer>
 
-    <div class="gvp-vignette" />
+    <div v-if="!isYouTube" class="gvp-vignette" />
 
     <div v-if="showDeviceToggle" class="gvp-toggle">
       <div class="gvp-toggle-pill">
@@ -178,7 +205,7 @@ function onMouseLeave() {
       <IconX />
     </button>
 
-    <div v-if="!isPlaying" class="gvp-play-wrap">
+    <div v-if="!isYouTube && !isPlaying" class="gvp-play-wrap">
       <button
         aria-label="Play"
         class="gvp-play"
@@ -194,6 +221,6 @@ function onMouseLeave() {
       </button>
     </div>
 
-    <div class="gvp-bottom-fade" />
+    <div v-if="!isYouTube" class="gvp-bottom-fade" />
   </div>
 </template>

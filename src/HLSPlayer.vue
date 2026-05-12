@@ -11,6 +11,7 @@ const props = withDefaults(
     muted?: boolean;
     loop?: boolean;
     controls?: boolean;
+    autoPlay?: boolean;
     playsInline?: boolean;
     preload?: string;
     poster?: string;
@@ -20,6 +21,7 @@ const props = withDefaults(
     muted: true,
     loop: false,
     controls: false,
+    autoPlay: false,
     playsInline: true,
     preload: "metadata"
   }
@@ -95,6 +97,7 @@ defineExpose({ videoEl });
     :muted="muted"
     :loop="loop"
     :controls="controls"
+    :autoplay="autoPlay"
     :playsinline="playsInline"
     :preload="preload"
     :poster="poster"

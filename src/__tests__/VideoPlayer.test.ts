@@ -68,4 +68,50 @@ describe("VueVideoPlayer", () => {
     const root = wrapper.find(".gvp-root");
     expect((root.element as HTMLElement).style.aspectRatio).toBe("4/3");
   });
+
+  it("renders a YouTube iframe for YouTube URLs", () => {
+    const wrapper = mount(VideoPlayer, {
+      props: { src: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" }
+    });
+    const iframe = wrapper.find("iframe.gvp-youtube");
+    expect(iframe.exists()).toBe(true);
+    expect(iframe.attributes("src")).toContain(
+      "youtube-nocookie.com/embed/dQw4w9WgXcQ"
+    );
+    expect(wrapper.find("video").exists()).toBe(false);
+    expect(wrapper.find('[aria-label="Play"]').exists()).toBe(false);
+  });
+
+  it("still renders the device toggle and close button for YouTube", () => {
+    const wrapper = mount(VideoPlayer, {
+      props: { src: "https://youtu.be/dQw4w9WgXcQ", closable: true }
+    });
+    expect(wrapper.find('[aria-label="Desktop view"]').exists()).toBe(true);
+    expect(wrapper.find('[aria-label="Close"]').exists()).toBe(true);
+  });
+
+  it("threads autoPlay/loop/controls into the YouTube embed URL", () => {
+    const wrapper = mount(VideoPlayer, {
+      props: {
+        src: "https://youtu.be/dQw4w9WgXcQ",
+        autoPlay: true,
+        loop: true,
+        controls: false
+      }
+    });
+    const src = wrapper.find("iframe.gvp-youtube").attributes("src") ?? "";
+    expect(src).toContain("autoplay=1");
+    expect(src).toContain("mute=1");
+    expect(src).toContain("loop=1");
+    expect(src).toContain("playlist=dQw4w9WgXcQ");
+    expect(src).toContain("controls=0");
+  });
+
+  it("passes autoPlay to the native <video> element", () => {
+    const wrapper = mount(VideoPlayer, {
+      props: { src: "https://example.com/video.mp4", autoPlay: true }
+    });
+    const video = wrapper.find("video").element as HTMLVideoElement;
+    expect(video.autoplay).toBe(true);
+  });
 });
