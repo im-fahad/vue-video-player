@@ -39,7 +39,11 @@ const canUseHlsJs = globalThis.window !== undefined && Hls.isSupported();
 const shouldUseHls = (src: string) =>
   Boolean(props.isHls) || (canUseHlsJs && src.endsWith(".m3u8"));
 
+let detachLoadedMetadata: (() => void) | undefined;
+
 function cleanup() {
+  detachLoadedMetadata?.();
+  detachLoadedMetadata = undefined;
   if (hlsInstance.value) {
     hlsInstance.value.destroy();
     hlsInstance.value = null;
@@ -58,11 +62,22 @@ function initPlayer(src: string) {
 
   cleanup();
 
+  // Tries to start playback once the stream is ready. Browsers only honor
+  // sound-on autoplay after a user gesture, so this is best effort — silently
+  // swallows the NotAllowedError when blocked.
+  const tryAutoPlay = () => {
+    if (!props.autoPlay) return;
+    el.play().catch(() => {
+      /* autoplay blocked; user gesture required */
+    });
+  };
+
   if (shouldUseHls(src)) {
     const hls = new Hls(props.hlsConfig);
     hlsInstance.value = hls;
     hls.attachMedia(el);
     hls.loadSource(src);
+    hls.on(Hls.Events.MANIFEST_PARSED, tryAutoPlay);
     hls.on(Hls.Events.ERROR, (_evt, data) => {
       if (data.fatal) {
         hls.destroy();
@@ -72,6 +87,10 @@ function initPlayer(src: string) {
   } else {
     el.src = src;
     el.load();
+    el.addEventListener("loadedmetadata", tryAutoPlay, { once: true });
+    detachLoadedMetadata = () => {
+      el.removeEventListener("loadedmetadata", tryAutoPlay);
+    };
   }
 }
 

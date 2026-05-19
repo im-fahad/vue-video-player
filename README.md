@@ -100,7 +100,7 @@ Then use the component anywhere — no manual import required:
 | `muted`             | `boolean`                                         | `true`                                  | Mute the video. Required for autoplay in most browsers.                                  |
 | `loop`              | `boolean`                                         | `false`                                 | Loop playback.                                                                           |
 | `controls`          | `boolean`                                         | `false`                                 | Show native browser controls.                                                            |
-| `autoPlay`          | `boolean`                                         | `false`                                 | Start playback as soon as the source loads. Browsers block sound-on autoplay, so this only fires when `muted` is also `true` (the default). |
+| `autoPlay`          | `boolean`                                         | `false`                                 | Start playback as soon as the source is ready. Works for HLS (after `MANIFEST_PARSED`), native MP4/WebM (after `loadedmetadata`), and YouTube embeds. Browsers block sound-on autoplay, so this only fires when `muted` is also `true` (the default). |
 | `frameMaxWidth`     | `{ desktop?: string; mobile?: string }`           | `{ desktop: "960px", mobile: "420px" }` | Max width of the player in each device mode.                                             |
 | `aspectRatio`       | `{ desktop?: AspectRatio; mobile?: AspectRatio }` | `{ desktop: "16/9", mobile: "9/16" }`   | Aspect ratio per device mode. `AspectRatio` is `` `${number}/${number}` ``.              |
 | `hlsConfig`         | `Hls.HlsConfig`                                   | —                                       | Optional hls.js config. Use a stable reference (e.g. `shallowRef`) to avoid HLS rebuilds.|
@@ -164,9 +164,21 @@ Recognised forms: `youtube.com/watch?v=ID`, `youtu.be/ID`, `youtube.com/embed/ID
   src="/videos/hero.m3u8"
   :muted="true"
   :loop="true"
+  :auto-play="true"
   :show-device-toggle="false"
 />
 ```
+
+### Autoplay an HLS stream
+
+```vue
+<VueVideoPlayer
+  src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  :auto-play="true"
+/>
+```
+
+> `autoPlay` waits for the manifest to parse (HLS) or for `loadedmetadata` (native), then calls `.play()` for you. Browsers reject sound-on autoplay without a prior user gesture — `muted` (the default) is the reliable path.
 
 ### Hover-to-play with a tooltip
 

@@ -107,11 +107,16 @@ describe("VueVideoPlayer", () => {
     expect(src).toContain("controls=0");
   });
 
-  it("passes autoPlay to the native <video> element", () => {
+  it("calls play() on the native <video> when autoPlay is set, after metadata loads", () => {
     const wrapper = mount(VideoPlayer, {
       props: { src: "https://example.com/video.mp4", autoPlay: true }
     });
     const video = wrapper.find("video").element as HTMLVideoElement;
+    // Attribute is also set on the <video> as a belt-and-suspenders for plain MP4.
     expect(video.autoplay).toBe(true);
+    // The HLSPlayer waits for the `loadedmetadata` event before calling
+    // play() — simulate it firing.
+    video.dispatchEvent(new Event("loadedmetadata"));
+    expect(video.play).toHaveBeenCalled();
   });
 });
